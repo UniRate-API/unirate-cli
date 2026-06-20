@@ -1,0 +1,12 @@
+# Binaries
+/unirate
+/unirate.exe
+*.test
+*.out
+
+# goreleaser output
+/dist/
+
+# Editor / OS cruft
+.DS_Store
+*.swp

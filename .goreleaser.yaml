@@ -1,0 +1,95 @@
+# goreleaser configuration for the unirate CLI.
+# Validate locally with `goreleaser check`; build a dry-run with
+# `goreleaser release --snapshot --clean`.
+#
+# A real `goreleaser release` runs only from the GitHub Actions release
+# workflow on a pushed `v*` tag. Cross-repo Homebrew tap + Scoop bucket pushes
+# require the TAP_GITHUB_TOKEN secret and the UniRate-API/homebrew-unirate +
+# UniRate-API/scoop-unirate repos to exist (see README "Distribution").
+version: 2
+
+project_name: unirate
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: unirate
+    main: .
+    binary: unirate
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X main.version={{ .Version }}
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+
+archives:
+  - id: unirate
+    name_template: >-
+      {{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}
+    formats: [tar.gz]
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    files:
+      - README.md
+      - LICENSE
+
+checksum:
+  name_template: "checksums.txt"
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+      - "^ci:"
+
+homebrew_casks:
+  - name: unirate
+    repository:
+      owner: UniRate-API
+      name: homebrew-unirate
+      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
+    directory: Casks
+    homepage: "https://github.com/UniRate-API/unirate-cli"
+    description: "Currency exchange rates, conversion, and VAT from the UniRate API"
+    license: "MIT"
+    # Strip the macOS quarantine xattr so Gatekeeper doesn't block the binary
+    # on first run (recommended by the goreleaser cask docs).
+    hooks:
+      post:
+        install: |
+          if system_command("/usr/bin/xattr", args: ["-h"]).exit_status == 0
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/unirate"]
+          end
+
+scoops:
+  - repository:
+      owner: UniRate-API
+      name: scoop-unirate
+      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
+    homepage: "https://github.com/UniRate-API/unirate-cli"
+    description: "Currency exchange rates, conversion, and VAT from the UniRate API"
+    license: "MIT"
+
+release:
+  github:
+    owner: UniRate-API
+    name: unirate-cli
+  draft: false
+  prerelease: auto
