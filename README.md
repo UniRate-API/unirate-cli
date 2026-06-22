@@ -47,6 +47,16 @@ go install github.com/UniRate-API/unirate-cli@latest
 **Binaries:** prebuilt archives for linux/macOS/windows (amd64 + arm64) are
 attached to each [GitHub release](https://github.com/UniRate-API/unirate-cli/releases).
 
+**Docker** (linux/amd64 + arm64):
+
+```bash
+docker run --rm -e UNIRATE_API_KEY="$UNIRATE_API_KEY" \
+  ghcr.io/unirate-api/unirate-cli:latest convert 100 USD EUR
+```
+
+Images are published to the [GitHub Container Registry](https://github.com/UniRate-API/unirate-cli/pkgs/container/unirate-cli)
+on every release and on pushes to `main`.
+
 ## Authentication
 
 Every command needs an API key. Set it once in your environment:
