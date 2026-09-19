@@ -52,10 +52,15 @@ attached to each [GitHub release](https://github.com/UniRate-API/unirate-cli/rel
 ```bash
 docker run --rm -e UNIRATE_API_KEY="$UNIRATE_API_KEY" \
   ghcr.io/unirate-api/unirate-cli:latest convert 100 USD EUR
+
+# ...or from Docker Hub:
+docker run --rm -e UNIRATE_API_KEY="$UNIRATE_API_KEY" \
+  unirate/unirate-cli:latest convert 100 USD EUR
 ```
 
-Images are published to the [GitHub Container Registry](https://github.com/UniRate-API/unirate-cli/pkgs/container/unirate-cli)
-on every release and on pushes to `main`.
+Images are published to both the [GitHub Container Registry](https://github.com/UniRate-API/unirate-cli/pkgs/container/unirate-cli)
+(`ghcr.io/unirate-api/unirate-cli`) and [Docker Hub](https://hub.docker.com/r/unirate/unirate-cli)
+(`unirate/unirate-cli`) on every release and on pushes to `main`.
 
 ## Authentication
 
