@@ -1,0 +1,31 @@
+VERIFICATION
+
+Verification is intended to assist the Chocolatey moderators and users in
+verifying that this package's contents are trustworthy.
+
+This package is maintained by the UniRate API team, the authors of the
+software it installs. The installer downloads the official release archive
+published by the same team on GitHub:
+
+  https://github.com/UniRate-API/unirate-cli/releases/tag/v0.1.0
+
+tools\chocolateyinstall.ps1 downloads the Windows archive and verifies its
+SHA-256 checksum against the value published in the release's checksums.txt:
+
+  unirate_0.1.0_windows_amd64.zip
+    667f111dcaf53fea600e677dfeb8871a32eb019137ef2a407adc4e0cefb1957f
+
+To verify the checksum yourself (PowerShell):
+
+  Invoke-WebRequest `
+    -Uri 'https://github.com/UniRate-API/unirate-cli/releases/download/v0.1.0/unirate_0.1.0_windows_amd64.zip' `
+    -OutFile unirate.zip
+  Get-FileHash unirate.zip -Algorithm SHA256
+
+The printed hash must match the value above and the corresponding line in:
+
+  https://github.com/UniRate-API/unirate-cli/releases/download/v0.1.0/checksums.txt
+
+The software is MIT-licensed. tools\LICENSE.txt is a verbatim copy of:
+
+  https://github.com/UniRate-API/unirate-cli/blob/main/LICENSE

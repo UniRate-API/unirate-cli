@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>unirate-cli</id>
+    <version>0.1.0</version>
+    <title>UniRate CLI</title>
+    <authors>UniRate API</authors>
+    <owners>unirateapi</owners>
+    <summary>Currency exchange rates, conversion, and VAT lookups from the UniRate API, straight from your terminal.</summary>
+    <description>
+The **UniRate CLI** (`unirate`) brings currency exchange rates, conversion, and
+VAT lookups from the [UniRate API](https://unirateapi.com) to your terminal.
+
+```
+unirate convert 100 USD EUR
+unirate rate USD JPY
+unirate rates EUR --json
+unirate currencies
+unirate vat DE
+```
+
+- Real-time rates between 170+ currencies (fiat + crypto)
+- Currency conversion, all-rates tables, and supported-currency listing
+- VAT rates for countries worldwide
+- Historical rates + time series (Pro)
+- `--json` on every command for clean piping into `jq`
+- A single static binary with **zero third-party runtime dependencies**
+
+The API key is read from the `UNIRATE_API_KEY` environment variable or the
+`--api-key` flag. Get a free key (no credit card) at https://unirateapi.com.
+
+## Package notes
+
+This package downloads the official, checksum-pinned release binary published
+by the UniRate team on GitHub. See `tools\VERIFICATION.txt` for how to verify
+it matches upstream.
+    </description>
+    <projectUrl>https://unirateapi.com</projectUrl>
+    <packageSourceUrl>https://github.com/UniRate-API/unirate-cli/tree/main/chocolatey</packageSourceUrl>
+    <projectSourceUrl>https://github.com/UniRate-API/unirate-cli</projectSourceUrl>
+    <docsUrl>https://github.com/UniRate-API/unirate-cli#readme</docsUrl>
+    <bugTrackerUrl>https://github.com/UniRate-API/unirate-cli/issues</bugTrackerUrl>
+    <licenseUrl>https://github.com/UniRate-API/unirate-cli/blob/main/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <tags>unirate currency exchange-rates forex fx vat conversion cli api cross-platform</tags>
+    <releaseNotes>https://github.com/UniRate-API/unirate-cli/releases/tag/v0.1.0</releaseNotes>
+    <copyright>Copyright (c) 2026 UniRate API</copyright>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>

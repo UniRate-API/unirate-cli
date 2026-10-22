@@ -1,0 +1,45 @@
+name: Chocolatey
+
+# Packs and publishes the Chocolatey package for the UniRate CLI on GitHub's
+# isolated windows-latest runner (choco is preinstalled there), so no
+# package-manager command ever runs on a maintainer's host. The package is a
+# thin, checksum-pinned wrapper around the official GitHub release binary.
+#
+# Trigger manually (Actions > Chocolatey > Run workflow) once CHOCO_API_KEY is
+# set as a repo secret, or by pushing a `choco-v*` tag.
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "choco-v*"
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Pack
+        run: choco pack chocolatey\unirate-cli.nuspec --out chocolatey
+
+      - name: Smoke-install from the packed nupkg
+        run: |
+          choco install unirate-cli --source "chocolatey;https://community.chocolatey.org/api/v2/" --yes --no-progress
+          if ($LASTEXITCODE -ne 0) { throw "choco install failed" }
+          $out = unirate version
+          Write-Host "unirate version -> $out"
+          if ($LASTEXITCODE -ne 0) { throw "unirate did not run after install" }
+
+      - name: Push to Chocolatey community repository
+        if: github.ref_type == 'tag' || github.event_name == 'workflow_dispatch'
+        env:
+          CHOCO_API_KEY: ${{ secrets.CHOCO_API_KEY }}
+        run: |
+          if (-not $env:CHOCO_API_KEY) { throw "CHOCO_API_KEY secret is not set" }
+          $pkg = Get-ChildItem chocolatey\*.nupkg | Select-Object -First 1
+          choco push $pkg.FullName --source https://push.chocolatey.org/ --api-key $env:CHOCO_API_KEY
