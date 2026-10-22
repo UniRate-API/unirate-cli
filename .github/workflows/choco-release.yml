@@ -29,7 +29,8 @@ jobs:
 
       - name: Smoke-install from the packed nupkg
         run: |
-          choco install unirate-cli --source "chocolatey;https://community.chocolatey.org/api/v2/" --yes --no-progress
+          $src = (Resolve-Path chocolatey).Path
+          choco install unirate-cli --version 0.1.0 --source "$src" --yes --no-progress
           if ($LASTEXITCODE -ne 0) { throw "choco install failed" }
           $out = unirate version
           Write-Host "unirate version -> $out"
